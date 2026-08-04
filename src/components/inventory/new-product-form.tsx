@@ -47,7 +47,7 @@ export function NewProductForm() {
             <Label htmlFor="name">{tCommon("name")} *</Label>
             <Input id="name" name="name" required placeholder={t("namePlaceholder")} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="sku">{tCommon("sku")}</Label>
               <Input id="sku" name="sku" placeholder={t("skuPlaceholder")} />
@@ -57,7 +57,7 @@ export function NewProductForm() {
               <Input id="price" name="price" type="number" step="0.01" min="0" required placeholder="5.00" />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="cost">{tCommon("cost")}</Label>
               <Input id="cost" name="cost" type="number" step="0.01" min="0" placeholder="2.50" />

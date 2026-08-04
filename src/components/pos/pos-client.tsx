@@ -10,6 +10,7 @@ import { createSaleAction } from "@/app/actions";
 import { formatMoney, PaymentMethod } from "@/domain/shared/types";
 import { SessionSaleView } from "@/infrastructure/supabase/mappers/sale.mapper";
 import { SessionSalesList } from "@/components/sales/session-sales-list";
+import { cn } from "@/lib/utils";
 
 export interface PosProduct {
   id: string;
@@ -24,6 +25,136 @@ interface CartItem {
   name: string;
   priceCents: number;
   quantity: number;
+}
+
+function CartPanel({
+  cart,
+  totalCents,
+  paymentMethod,
+  loading,
+  error,
+  lastSale,
+  onUpdateQty,
+  onPaymentChange,
+  onCheckout,
+  t,
+  tCommon,
+  tPayment,
+  compact = false,
+}: {
+  cart: CartItem[];
+  totalCents: number;
+  paymentMethod: PaymentMethod;
+  loading: boolean;
+  error: string | null;
+  lastSale: string | null;
+  onUpdateQty: (productId: string, delta: number) => void;
+  onPaymentChange: (method: PaymentMethod) => void;
+  onCheckout: () => void;
+  t: ReturnType<typeof useTranslations<"pos">>;
+  tCommon: ReturnType<typeof useTranslations<"common">>;
+  tPayment: ReturnType<typeof useTranslations<"payment">>;
+  compact?: boolean;
+}) {
+  return (
+    <>
+      <h2 className={cn("font-semibold", compact ? "mb-2 text-base" : "mb-4 text-lg")}>
+        {t("cart")}
+      </h2>
+
+      {cart.length === 0 ? (
+        <p className="text-sm text-muted">{t("tapToAdd")}</p>
+      ) : (
+        <ul className={cn("space-y-3", compact && "max-h-36 overflow-y-auto")}>
+          {cart.map((item) => (
+            <li key={item.productId} className="flex items-center justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-medium">{item.name}</div>
+                <div className="text-xs text-muted">
+                  {formatMoney(item.priceCents)} {t("each")}
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => onUpdateQty(item.productId, -1)}
+                  className="rounded p-2 hover:bg-surface"
+                  aria-label={tCommon("quantity")}
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="w-6 text-center text-sm">{item.quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => onUpdateQty(item.productId, 1)}
+                  className="rounded p-2 hover:bg-surface"
+                  aria-label={tCommon("quantity")}
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onUpdateQty(item.productId, -item.quantity)}
+                  className="rounded p-2 text-brand hover:bg-brand-muted"
+                  aria-label={tCommon("cancel")}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className={cn("border-t border-border pt-4", compact ? "mt-3" : "mt-6")}>
+        <div className="flex justify-between text-lg font-bold">
+          <span>{tCommon("total")}</span>
+          <span>{formatMoney(totalCents)}</span>
+        </div>
+      </div>
+
+      <div className={compact ? "mt-3" : "mt-4"}>
+        <p className="mb-2 text-sm font-medium">{t("paymentMethod")}</p>
+        <div className="flex gap-2">
+          {(["cash", "card", "transfer"] as const).map((method) => (
+            <button
+              key={method}
+              type="button"
+              onClick={() => onPaymentChange(method)}
+              className={cn(
+                "min-h-11 flex-1 rounded-lg border px-3 py-2 text-sm",
+                paymentMethod === method
+                  ? "border-brand bg-brand-muted text-brand"
+                  : "border-border text-muted hover:text-foreground",
+              )}
+            >
+              {tPayment(method)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {error && (
+        <div className="mt-3 rounded-lg border border-brand/20 bg-brand-muted px-3 py-2 text-sm text-brand">
+          {error}
+        </div>
+      )}
+      {lastSale && (
+        <div className="mt-3 rounded-lg border border-brand/20 bg-brand-muted px-3 py-2 text-sm text-brand">
+          {t("saleCompleted", { amount: lastSale })}
+        </div>
+      )}
+
+      <Button
+        className={cn("w-full", compact ? "mt-3" : "mt-4")}
+        size="lg"
+        disabled={loading || cart.length === 0}
+        onClick={onCheckout}
+      >
+        {loading ? tCommon("processing") : t("completeSale")}
+      </Button>
+    </>
+  );
 }
 
 export function PosClient({
@@ -112,6 +243,21 @@ export function PosClient({
     setLoading(false);
   }
 
+  const cartProps = {
+    cart,
+    totalCents,
+    paymentMethod,
+    loading,
+    error,
+    lastSale,
+    onUpdateQty: updateQty,
+    onPaymentChange: setPaymentMethod,
+    onCheckout: checkout,
+    t,
+    tCommon,
+    tPayment,
+  };
+
   if (!sessionId) {
     return (
       <Card className="text-center">
@@ -128,15 +274,15 @@ export function PosClient({
   return (
     <div className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className={cn("lg:col-span-2", cart.length > 0 && "pb-72 lg:pb-0")}>
           <Card className="overflow-hidden p-0">
-            <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-3 p-3 sm:grid-cols-2 sm:p-4 lg:grid-cols-2 xl:grid-cols-3">
               {activeProducts.map((product) => (
                 <button
                   key={product.id}
                   type="button"
                   onClick={() => addToCart(product)}
-                  className="rounded-lg border border-border p-4 text-left transition hover:border-brand hover:bg-brand-muted"
+                  className="min-h-[5rem] rounded-lg border border-border p-4 text-left transition active:scale-[0.98] hover:border-brand hover:bg-brand-muted sm:min-h-[5.5rem]"
                 >
                   <div className="font-medium">{product.name}</div>
                   <div className="mt-1 text-brand">{formatMoney(product.priceCents)}</div>
@@ -152,100 +298,18 @@ export function PosClient({
           </Card>
         </div>
 
-        <div>
-          <Card>
-            <h2 className="mb-4 text-lg font-semibold">{t("cart")}</h2>
-
-            {cart.length === 0 ? (
-              <p className="text-sm text-muted">{t("tapToAdd")}</p>
-            ) : (
-              <ul className="space-y-3">
-                {cart.map((item) => (
-                  <li key={item.productId} className="flex items-center justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium">{item.name}</div>
-                      <div className="text-xs text-muted">
-                        {formatMoney(item.priceCents)} {t("each")}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => updateQty(item.productId, -1)}
-                        className="rounded p-1 hover:bg-surface"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <span className="w-6 text-center text-sm">{item.quantity}</span>
-                      <button
-                        type="button"
-                        onClick={() => updateQty(item.productId, 1)}
-                        className="rounded p-1 hover:bg-surface"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => updateQty(item.productId, -item.quantity)}
-                        className="rounded p-1 text-brand hover:bg-brand-muted"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div className="mt-6 border-t border-border pt-4">
-              <div className="flex justify-between text-lg font-bold">
-                <span>{tCommon("total")}</span>
-                <span>{formatMoney(totalCents)}</span>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <p className="mb-2 text-sm font-medium">{t("paymentMethod")}</p>
-              <div className="flex gap-2">
-                {(["cash", "card", "transfer"] as const).map((method) => (
-                  <button
-                    key={method}
-                    type="button"
-                    onClick={() => setPaymentMethod(method)}
-                    className={`flex-1 rounded-lg border px-3 py-2 text-sm ${
-                      paymentMethod === method
-                        ? "border-brand bg-brand-muted text-brand"
-                        : "border-border text-muted hover:text-foreground"
-                    }`}
-                  >
-                    {tPayment(method)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {error && (
-              <div className="mt-4 rounded-lg bg-brand-muted px-3 py-2 text-sm text-brand border border-brand/20">
-                {error}
-              </div>
-            )}
-            {lastSale && (
-              <div className="mt-4 rounded-lg bg-brand-muted px-3 py-2 text-sm text-brand border border-brand/20">
-                {t("saleCompleted", { amount: lastSale })}
-              </div>
-            )}
-
-            <Button
-              className="mt-4 w-full"
-              size="lg"
-              disabled={loading || cart.length === 0}
-              onClick={checkout}
-            >
-              {loading ? tCommon("processing") : t("completeSale")}
-            </Button>
+        <div className="hidden lg:block">
+          <Card className="sticky top-6">
+            <CartPanel {...cartProps} />
           </Card>
         </div>
       </div>
+
+      {cart.length > 0 && (
+        <div className="fixed bottom-16 left-0 right-0 z-30 border-t border-border bg-surface-elevated p-4 shadow-[0_-4px_24px_rgba(0,0,0,0.4)] lg:hidden">
+          <CartPanel {...cartProps} compact />
+        </div>
+      )}
 
       <SessionSalesList
         sales={recentSales}

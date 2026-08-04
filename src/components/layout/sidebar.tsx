@@ -4,22 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Wallet,
-  LogOut,
-} from "lucide-react";
+import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/infrastructure/supabase/client";
-
-const navItems = [
-  { href: "/dashboard", key: "dashboard", icon: LayoutDashboard },
-  { href: "/pos", key: "pos", icon: ShoppingCart },
-  { href: "/inventory", key: "inventory", icon: Package },
-  { href: "/register", key: "register", icon: Wallet },
-] as const;
+import { navItems } from "@/components/layout/nav-config";
 
 export function Sidebar({
   gymName,
@@ -44,7 +32,7 @@ export function Sidebar({
   }
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-border bg-background">
+    <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-background lg:flex">
       <div className="border-b border-border p-6">
         <Image
           src="/logo.png"

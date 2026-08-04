@@ -36,7 +36,9 @@
     "sales": "ventas",
     "sale": "venta",
     "needsAttention": "Requiere atención",
-    "somethingWrong": "Algo salió mal"
+    "somethingWrong": "Algo salió mal",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "roles": {
     "admin": "Administrador",
@@ -50,9 +52,13 @@
   },
   "nav": {
     "dashboard": "Panel",
+    "dashboardShort": "Panel",
     "pos": "Punto de venta",
+    "posShort": "Venta",
     "inventory": "Inventario",
-    "register": "Caja"
+    "inventoryShort": "Stock",
+    "register": "Caja",
+    "registerShort": "Caja"
   },
   "auth": {
     "subtitle": "Inventario y caja registradora para tu gimnasio",

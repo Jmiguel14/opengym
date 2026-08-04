@@ -15,7 +15,7 @@ export default async function InventoryPage() {
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-muted">{t("productCount", { count: products.length })}</p>

@@ -36,7 +36,9 @@
     "sales": "sales",
     "sale": "sale",
     "needsAttention": "Needs attention",
-    "somethingWrong": "Something went wrong"
+    "somethingWrong": "Something went wrong",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "roles": {
     "admin": "Admin",
@@ -50,9 +52,13 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "dashboardShort": "Panel",
     "pos": "Point of Sale",
+    "posShort": "POS",
     "inventory": "Inventory",
-    "register": "Cash Register"
+    "inventoryShort": "Stock",
+    "register": "Cash Register",
+    "registerShort": "Register"
   },
   "auth": {
     "subtitle": "Inventory & cash register for your gym",

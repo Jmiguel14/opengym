@@ -42,7 +42,7 @@ export function ProductEditForm({ product }: { product: ProductProps }) {
           <Label htmlFor="name">{tCommon("name")}</Label>
           <Input id="name" name="name" defaultValue={product.name} required />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="sku">{tCommon("sku")}</Label>
             <Input id="sku" name="sku" defaultValue={product.sku ?? ""} />
@@ -60,7 +60,7 @@ export function ProductEditForm({ product }: { product: ProductProps }) {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="minStock">{t("minStock")}</Label>
             <Input
