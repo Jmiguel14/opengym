@@ -1,0 +1,8 @@
+# Supabase local development (optional)
+project_id = "opengym-app"
+
+[api]
+enabled = true
+
+[db]
+major_version = 15
