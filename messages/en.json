@@ -64,7 +64,31 @@
     "subtitle": "Inventory, sales, and cash close for your business",
     "email": "Email",
     "password": "Password",
-    "emailPlaceholder": "you@business.com"
+    "emailPlaceholder": "you@business.com",
+    "backHome": "← Back to home",
+    "fillDemo": "Use demo account"
+  },
+  "landing": {
+    "eyebrow": "Inventory · POS · Cash close",
+    "headline": "Open the till, sell, and close the day without a spreadsheet.",
+    "subheadline": "CajaLibre is inventory, point of sale, and cash register close for gyms, studios, and any business that opens a drawer every day.",
+    "tryDemo": "Try the demo",
+    "featureInventoryTitle": "Inventory",
+    "featureInventoryBody": "Products, stock levels, and low-stock alerts. Sales deduct stock automatically.",
+    "featurePosTitle": "Point of sale",
+    "featurePosBody": "Tap to add items. Charge cash, card, or transfer in a few taps.",
+    "featureRegisterTitle": "Cash close",
+    "featureRegisterBody": "Opening float, cash in/out, expected vs counted, and variance at the end of the shift.",
+    "flowTitle": "A shift in four steps",
+    "flow1": "Open the register with your opening cash",
+    "flow2": "Check stock and prices",
+    "flow3": "Sell at the POS",
+    "flow4": "Close and review the variance",
+    "demoTitle": "Public demo",
+    "demoHint": "Shared test data. Don't enter real money or customer information.",
+    "demoEmail": "Email",
+    "demoPassword": "Password",
+    "footerCta": "Run a gym, studio, or daily till? Try the demo and message me if you want it for your business."
   },
   "dashboard": {
     "title": "Dashboard",
