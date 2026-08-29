@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button, Input, Label, Card } from "@/components/ui";
 import { createProductAction } from "@/app/actions";
 
 export function NewProductForm() {
-  const router = useRouter();
   const t = useTranslations("inventory");
   const tCommon = useTranslations("common");
   const [error, setError] = useState<string | null>(null);
@@ -22,14 +20,10 @@ export function NewProductForm() {
     const formData = new FormData(e.currentTarget);
     const result = await createProductAction(formData);
 
-    if (!result.success) {
+    if (result && !result.success) {
       setError(result.error);
       setLoading(false);
-      return;
     }
-
-    router.push(`/inventory/${result.data.id}`);
-    router.refresh();
   }
 
   return (
@@ -81,7 +75,7 @@ export function NewProductForm() {
           </label>
 
           {error && (
-            <div className="rounded-lg bg-brand-muted px-3 py-2 text-sm text-brand border border-brand/20">
+            <div className="rounded-lg border border-danger/20 bg-danger-muted px-3 py-2 text-sm text-danger">
               {error}
             </div>
           )}

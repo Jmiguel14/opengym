@@ -84,7 +84,7 @@ export function ProductEditForm({ product }: { product: ProductProps }) {
           </div>
         </div>
         {error && (
-          <div className="rounded-lg bg-brand-muted px-3 py-2 text-sm text-brand border border-brand/20">
+          <div className="rounded-lg border border-danger/20 bg-danger-muted px-3 py-2 text-sm text-danger">
             {error}
           </div>
         )}

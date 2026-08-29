@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { createClient } from "@/infrastructure/supabase/client";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button, Input, Label, Card } from "@/components/ui";
+import { Wordmark } from "@/components/layout/wordmark";
 
 export function LoginForm() {
   const router = useRouter();
@@ -40,15 +40,7 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md border-border bg-surface-elevated">
       <div className="mb-6 text-center">
-        <Image
-          src="/logo.png"
-          alt="Open Gym"
-          width={200}
-          height={60}
-          className="mx-auto h-16 w-auto object-contain"
-          style={{ width: "auto", height: "4rem" }}
-          priority
-        />
+        <Wordmark size="lg" />
         <p className="mt-3 text-sm text-muted">{t("subtitle")}</p>
       </div>
 
@@ -77,7 +69,7 @@ export function LoginForm() {
         </div>
 
         {error && (
-          <div className="rounded-lg bg-brand-muted px-3 py-2 text-sm text-brand border border-brand/20">
+          <div className="rounded-lg border border-danger/20 bg-danger-muted px-3 py-2 text-sm text-danger">
             {error}
           </div>
         )}

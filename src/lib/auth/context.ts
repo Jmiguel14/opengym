@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/infrastructure/supabase/server";
 import {
   AuthContext,
@@ -7,7 +8,7 @@ import {
 
 const DEMO_GYM_ID = "22222222-2222-2222-2222-222222222222";
 
-export async function getAuthContext(): Promise<AuthContext> {
+export const getAuthContext = cache(async function getAuthContext(): Promise<AuthContext> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -66,7 +67,7 @@ export async function getAuthContext(): Promise<AuthContext> {
     organizationId: gym.organization_id,
     role: membership.role as UserRole,
   };
-}
+});
 
 export async function getOptionalAuthContext(): Promise<AuthContext | null> {
   try {

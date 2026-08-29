@@ -95,7 +95,7 @@ function CartPanel({
                 <button
                   type="button"
                   onClick={() => onUpdateQty(item.productId, -item.quantity)}
-                  className="rounded p-2 text-brand hover:bg-brand-muted"
+                  className="rounded p-2 text-danger hover:bg-danger-muted"
                   aria-label={tCommon("cancel")}
                 >
                   <Trash2 className="h-4 w-4" />
@@ -135,12 +135,12 @@ function CartPanel({
       </div>
 
       {error && (
-        <div className="mt-3 rounded-lg border border-brand/20 bg-brand-muted px-3 py-2 text-sm text-brand">
+        <div className="mt-3 rounded-lg border border-danger/20 bg-danger-muted px-3 py-2 text-sm text-danger">
           {error}
         </div>
       )}
       {lastSale && (
-        <div className="mt-3 rounded-lg border border-brand/20 bg-brand-muted px-3 py-2 text-sm text-brand">
+        <div className="mt-3 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
           {t("saleCompleted", { amount: lastSale })}
         </div>
       )}

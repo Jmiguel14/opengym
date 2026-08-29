@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { navItems } from "@/components/layout/nav-config";
+import { NavLink } from "@/components/layout/nav-link";
 
 export function MobileBottomNav() {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export function MobileBottomNav() {
         {navItems.map(({ href, shortKey, icon: Icon }) => {
           const active = pathname.startsWith(href);
           return (
-            <Link
+            <NavLink
               key={href}
               href={href}
               className={cn(
@@ -26,7 +26,7 @@ export function MobileBottomNav() {
             >
               <Icon className={cn("h-5 w-5", active && "text-brand")} />
               <span className="max-w-full truncate">{t(shortKey)}</span>
-            </Link>
+            </NavLink>
           );
         })}
       </div>

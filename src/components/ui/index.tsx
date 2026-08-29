@@ -17,10 +17,11 @@ export function Button({
         size === "md" && "px-4 py-2 text-sm",
         size === "lg" && "px-6 py-3 text-base",
         variant === "primary" &&
-          "bg-brand text-white hover:bg-brand-hover",
+          "bg-brand text-background hover:bg-brand-hover",
         variant === "secondary" &&
           "bg-surface-elevated text-foreground hover:bg-border border border-border",
-        variant === "danger" && "bg-zinc-700 text-white hover:bg-zinc-600",
+        variant === "danger" &&
+          "bg-danger text-background hover:bg-danger-hover",
         variant === "ghost" &&
           "bg-transparent text-muted hover:bg-surface-elevated",
         className,
@@ -91,6 +92,14 @@ export function Card({
   );
 }
 
+export function Skeleton({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn("animate-pulse rounded-md bg-border/80", className)}
+    />
+  );
+}
+
 export function Badge({
   className,
   variant = "default",
@@ -107,7 +116,8 @@ export function Badge({
         variant === "default" && "bg-surface text-muted border border-border",
         variant === "success" && "bg-zinc-800 text-emerald-400 border border-emerald-500/30",
         variant === "warning" && "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-        variant === "danger" && "bg-brand-muted text-brand border border-brand/20",
+        variant === "danger" &&
+          "bg-danger-muted text-danger border border-danger/20",
         className,
       )}
     >

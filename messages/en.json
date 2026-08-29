@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Open Gym",
+    "appName": "CajaLibre",
     "save": "Save",
     "cancel": "Cancel",
     "back": "Back",
@@ -61,10 +61,10 @@
     "registerShort": "Register"
   },
   "auth": {
-    "subtitle": "Inventory & cash register for your gym",
+    "subtitle": "Inventory, sales, and cash close for your business",
     "email": "Email",
     "password": "Password",
-    "emailPlaceholder": "you@gym.com"
+    "emailPlaceholder": "you@business.com"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -179,7 +179,7 @@
     "empty": "No sales in this session yet."
   },
   "metadata": {
-    "title": "Open Gym — Inventory & Cash Register",
-    "description": "Gym inventory management, point of sale, and cash register closing"
+    "title": "CajaLibre — Inventory & Cash Register",
+    "description": "Inventory, point of sale, and cash register closing for your business"
   }
 }

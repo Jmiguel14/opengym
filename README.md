@@ -1,6 +1,6 @@
-# OpenGym App
+# CajaLibre
 
-Gym inventory management with point of sale and cash register closing (cierre de caja). Built with **Next.js**, **Supabase**, and a pragmatic hexagonal architecture ready to scale to multiple gym locations.
+Inventory, point of sale, and cash register closing (cierre de caja). Built with **Next.js**, **Supabase**, and a pragmatic hexagonal architecture ready to scale to multiple locations.
 
 ## Features (MVP)
 
@@ -148,4 +148,4 @@ A gym switcher in the UI can be added when you onboard location #2.
 
 ## License
 
-Private — OpenGym
+Private — CajaLibre

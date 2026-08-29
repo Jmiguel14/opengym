@@ -95,7 +95,7 @@ export function RegisterClient({
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-lg bg-brand-muted px-4 py-3 text-sm text-brand border border-brand/20">
+        <div className="rounded-lg border border-danger/20 bg-danger-muted px-4 py-3 text-sm text-danger">
           {error}
         </div>
       )}
@@ -280,10 +280,10 @@ export function RegisterClient({
                         <span
                           className={
                             s.varianceCents === 0
-                              ? "text-brand"
+                              ? "text-emerald-400"
                               : s.varianceCents > 0
                                 ? "text-amber-400"
-                                : "text-brand"
+                                : "text-danger"
                           }
                         >
                           {formatMoney(s.varianceCents)}

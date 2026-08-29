@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Open Gym",
+    "appName": "CajaLibre",
     "save": "Guardar",
     "cancel": "Cancelar",
     "back": "Volver",
@@ -61,10 +61,10 @@
     "registerShort": "Caja"
   },
   "auth": {
-    "subtitle": "Inventario y caja registradora para tu gimnasio",
+    "subtitle": "Inventario, ventas y cierre de caja para tu negocio",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "emailPlaceholder": "tu@gimnasio.com"
+    "emailPlaceholder": "tu@negocio.com"
   },
   "dashboard": {
     "title": "Panel",
@@ -179,7 +179,7 @@
     "empty": "Aún no hay ventas en esta sesión."
   },
   "metadata": {
-    "title": "Open Gym — Inventario y Caja",
-    "description": "Gestión de inventario, punto de venta y cierre de caja para gimnasios"
+    "title": "CajaLibre — Inventario y Caja",
+    "description": "Inventario, punto de venta y cierre de caja para tu negocio"
   }
 }

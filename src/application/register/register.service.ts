@@ -12,7 +12,11 @@ import {
   CashMovementInput,
 } from "@/lib/validation/schemas";
 import { CashRegisterSession as SessionEntity } from "@/domain/register/cash-register-session";
-import { SaleRow } from "@/infrastructure/supabase/database.types";
+import {
+  CashMovementRow,
+  SaleRow,
+  SessionRow,
+} from "@/infrastructure/supabase/database.types";
 import {
   mapSessionSales,
   SessionSaleView,
@@ -20,6 +24,21 @@ import {
 } from "@/infrastructure/supabase/mappers/sale.mapper";
 
 export type { SessionSaleView };
+
+export async function getOpenSessionId(
+  ctx: AuthContext,
+): Promise<string | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("cash_register_sessions")
+    .select("id")
+    .eq("gym_id", ctx.gymId)
+    .eq("status", "open")
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data?.id ?? null;
+}
 
 export async function getOpenSession(
   ctx: AuthContext,
@@ -35,7 +54,8 @@ export async function getOpenSession(
   if (error) throw new Error(error.message);
   if (!session) return null;
 
-  return enrichSession(session);
+  const [enriched] = await enrichSessions([session]);
+  return enriched;
 }
 
 export async function getSessionById(
@@ -53,7 +73,8 @@ export async function getSessionById(
   if (error) throw new Error(error.message);
   if (!session) return null;
 
-  return enrichSession(session);
+  const [enriched] = await enrichSessions([session]);
+  return enriched;
 }
 
 export async function listRecentSessions(
@@ -70,32 +91,44 @@ export async function listRecentSessions(
 
   if (error) throw new Error(error.message);
 
-  return Promise.all((data ?? []).map((s) => enrichSession(s)));
+  return enrichSessions(data ?? []);
 }
 
-async function enrichSession(
-  session: import("@/infrastructure/supabase/database.types").SessionRow,
-): Promise<CashRegisterSession> {
+async function enrichSessions(
+  sessions: SessionRow[],
+): Promise<CashRegisterSession[]> {
+  if (sessions.length === 0) return [];
+
   const supabase = await createClient();
+  const ids = sessions.map((s) => s.id);
 
-  const { data: sales } = await supabase
-    .from("sales")
-    .select("*")
-    .eq("session_id", session.id);
+  const [salesResult, movementsResult] = await Promise.all([
+    supabase.from("sales").select("*").in("session_id", ids),
+    supabase.from("cash_movements").select("*").in("session_id", ids),
+  ]);
 
-  const { data: cashMovements } = await supabase
-    .from("cash_movements")
-    .select("*")
-    .eq("session_id", session.id);
-
-  const totals = computeSessionTotals((sales ?? []) as SaleRow[]);
-
-  for (const m of cashMovements ?? []) {
-    if (m.movement_type === "in") totals.cashInCents += m.amount_cents;
-    if (m.movement_type === "out") totals.cashOutCents += Math.abs(m.amount_cents);
+  const salesBySession = new Map<string, SaleRow[]>();
+  for (const sale of (salesResult.data ?? []) as SaleRow[]) {
+    const list = salesBySession.get(sale.session_id) ?? [];
+    list.push(sale);
+    salesBySession.set(sale.session_id, list);
   }
 
-  return mapSessionRow(session, totals);
+  const movementsBySession = new Map<string, CashMovementRow[]>();
+  for (const movement of (movementsResult.data ?? []) as CashMovementRow[]) {
+    const list = movementsBySession.get(movement.session_id) ?? [];
+    list.push(movement);
+    movementsBySession.set(movement.session_id, list);
+  }
+
+  return sessions.map((session) => {
+    const totals = computeSessionTotals(salesBySession.get(session.id) ?? []);
+    for (const m of movementsBySession.get(session.id) ?? []) {
+      if (m.movement_type === "in") totals.cashInCents += m.amount_cents;
+      if (m.movement_type === "out") totals.cashOutCents += Math.abs(m.amount_cents);
+    }
+    return mapSessionRow(session, totals);
+  });
 }
 
 export async function openSession(
@@ -105,8 +138,8 @@ export async function openSession(
   const openingCashCents = parseMoneyToCents(input.openingCash);
   SessionEntity.validateOpen(openingCashCents);
 
-  const existing = await getOpenSession(ctx);
-  if (existing) {
+  const existingId = await getOpenSessionId(ctx);
+  if (existingId) {
     throw new Error("There is already an open cash register session");
   }
 
@@ -141,7 +174,8 @@ export async function closeSession(
   });
 
   if (error) throw new Error(error.message);
-  return enrichSession(data);
+  const [enriched] = await enrichSessions([data]);
+  return enriched;
 }
 
 export async function createSale(

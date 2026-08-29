@@ -28,15 +28,18 @@ function toView(
 }
 
 export default async function RegisterPage() {
-  const ctx = await getAuthContext();
-  const openSession = await getOpenSession(ctx);
+  const [ctx, t] = await Promise.all([
+    getAuthContext(),
+    getTranslations("register"),
+  ]);
+  const openSessionPromise = getOpenSession(ctx);
+  const recentSessionsPromise = listRecentSessions(ctx, 10);
+  const openSession = await openSessionPromise;
   const [recentSessions, sessionSales] = await Promise.all([
-    listRecentSessions(ctx, 10),
+    recentSessionsPromise,
     openSession ? listSessionSalesView(ctx, openSession.id) : Promise.resolve([]),
   ]);
-
   const canClose = ctx.role === "admin" || ctx.role === "manager";
-  const t = await getTranslations("register");
 
   return (
     <>

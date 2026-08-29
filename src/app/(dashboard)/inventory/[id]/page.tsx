@@ -13,11 +13,13 @@ export default async function ProductDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const ctx = await getAuthContext();
+  const [{ id }, ctx, t, tCommon] = await Promise.all([
+    params,
+    getAuthContext(),
+    getTranslations("inventory"),
+    getTranslations("common"),
+  ]);
   const product = await getProduct(ctx, id);
-  const t = await getTranslations("inventory");
-  const tCommon = await getTranslations("common");
 
   if (!product) notFound();
 

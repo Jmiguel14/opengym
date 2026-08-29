@@ -56,12 +56,12 @@ export function StockAdjustForm({ productId }: { productId: string }) {
           <Input id="reason" name="reason" required placeholder={t("reasonPlaceholder")} />
         </div>
         {error && (
-          <div className="rounded-lg bg-brand-muted px-3 py-2 text-sm text-brand border border-brand/20">
+          <div className="rounded-lg border border-danger/20 bg-danger-muted px-3 py-2 text-sm text-danger">
             {error}
           </div>
         )}
         {success && (
-          <div className="rounded-lg bg-brand-muted px-3 py-2 text-sm text-brand border border-brand/20">
+          <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
             {t("stockUpdated")}
           </div>
         )}

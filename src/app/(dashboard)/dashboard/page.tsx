@@ -12,10 +12,12 @@ import { getDashboardStats, formatMoney } from "@/application/dashboard/dashboar
 import { getAuthContext } from "@/lib/auth/context";
 
 export default async function DashboardPage() {
-  const ctx = await getAuthContext();
+  const [ctx, t, tCommon] = await Promise.all([
+    getAuthContext(),
+    getTranslations("dashboard"),
+    getTranslations("common"),
+  ]);
   const stats = await getDashboardStats(ctx);
-  const t = await getTranslations("dashboard");
-  const tCommon = await getTranslations("common");
 
   return (
     <>

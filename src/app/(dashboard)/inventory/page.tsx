@@ -7,11 +7,13 @@ import { getAuthContext } from "@/lib/auth/context";
 import { formatMoney } from "@/domain/shared/types";
 
 export default async function InventoryPage() {
-  const ctx = await getAuthContext();
+  const [ctx, t, tCommon] = await Promise.all([
+    getAuthContext(),
+    getTranslations("inventory"),
+    getTranslations("common"),
+  ]);
   const products = await listProducts(ctx);
   const canManage = ctx.role === "admin" || ctx.role === "manager";
-  const t = await getTranslations("inventory");
-  const tCommon = await getTranslations("common");
 
   return (
     <>

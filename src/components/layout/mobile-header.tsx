@@ -1,26 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LogOut, Menu, X } from "lucide-react";
 import { createClient } from "@/infrastructure/supabase/client";
 import { cn } from "@/lib/utils";
+import { Wordmark } from "@/components/layout/wordmark";
 
 export function MobileHeader({
-  gymName,
-  userEmail,
-  role,
+  title,
+  drawerTitle,
+  account,
 }: {
-  gymName: string;
-  userEmail: string;
-  role: string;
+  title: React.ReactNode;
+  drawerTitle: React.ReactNode;
+  account: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const tCommon = useTranslations("common");
-  const tRoles = useTranslations("roles");
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -33,18 +32,8 @@ export function MobileHeader({
     <>
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-background px-4 py-3 lg:hidden">
         <div className="flex min-w-0 items-center gap-3">
-          <Image
-            src="/logo.png"
-            alt="Open Gym"
-            width={120}
-            height={36}
-            className="h-8 w-auto shrink-0 object-contain"
-            style={{ width: "auto", height: "2rem" }}
-            priority
-          />
-          <div className="min-w-0">
-            <div className="truncate text-sm font-medium">{gymName}</div>
-          </div>
+          <Wordmark size="sm" className="shrink-0" />
+          <div className="min-w-0">{title}</div>
         </div>
         <button
           type="button"
@@ -70,7 +59,7 @@ export function MobileHeader({
             )}
           >
             <div className="flex items-center justify-between border-b border-border p-4">
-              <span className="font-medium">{gymName}</span>
+              <span className="min-w-0 font-medium">{drawerTitle}</span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -79,12 +68,7 @@ export function MobileHeader({
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="border-b border-border p-4">
-              <div className="truncate text-sm text-muted">{userEmail}</div>
-              <div className="mt-2 inline-block rounded bg-brand-muted px-2 py-0.5 text-xs text-brand border border-brand/20">
-                {tRoles(role as "admin" | "manager" | "cashier")}
-              </div>
-            </div>
+            <div className="border-b border-border p-4">{account}</div>
             <div className="mt-auto border-t border-border p-4">
               <button
                 type="button"

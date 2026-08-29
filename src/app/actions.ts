@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { getAuthContext } from "@/lib/auth/context";
 import {
   createProduct,
@@ -37,6 +38,7 @@ function toActionError(error: unknown): ActionResult<never> {
 export async function createProductAction(
   formData: FormData,
 ): Promise<ActionResult<{ id: string }>> {
+  let productId: string;
   try {
     const ctx = await getAuthContext();
     const parsed = createProductSchema.parse({
@@ -53,10 +55,12 @@ export async function createProductAction(
     const product = await createProduct(ctx, parsed);
     revalidatePath("/inventory");
     revalidatePath("/dashboard");
-    return { success: true, data: { id: product.id } };
+    productId = product.id;
   } catch (error) {
     return toActionError(error);
   }
+
+  redirect(`/inventory/${productId}`);
 }
 
 export async function updateProductAction(
